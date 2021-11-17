@@ -33,7 +33,7 @@ setup_requires = [
 from sphinx.setup_command import BuildDoc
 cmdclass = {'build_sphinx': BuildDoc}
 
-version = "0.1.0"
+version = "0.1.1"
 
 setup(
     name='pysimpleconfig',
@@ -44,7 +44,7 @@ setup(
     description="Simplified configuration file handler for any format",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/Kiln707/simpleconfig",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
