@@ -33,11 +33,10 @@ setup_requires = [
 from sphinx.setup_command import BuildDoc
 cmdclass = {'build_sphinx': BuildDoc}
 
-name = "SimpleConfig"
 version = "0.1.0"
 
 setup(
-    name=name,
+    name='pysimpleconfig',
     version=version,
     release=version,
     author="Steven Swanson",
@@ -59,7 +58,7 @@ setup(
     # these are optional and override conf.py settings
     command_options={
         'build_sphinx': {
-            'project': ('setup.py', name),
+            'project': ('setup.py', 'simpleconfig'),
             'version': ('setup.py', version),
             'release': ('setup.py', version),
             'source_dir': ('setup.py', 'docs')}},
