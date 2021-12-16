@@ -1,8 +1,5 @@
-mock~=4.0.2
-execnet~=1.7.1
-apipkg~=1.5
 setuptools~=50.3.0
 pytest~=6.1.1
 Sphinx~=3.2.1
-SimpleConfig~=0.0.2
 blinker~=1.4
+tox

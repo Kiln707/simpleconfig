@@ -89,6 +89,11 @@ def test_save_config_no_location():
     config = load_or_create(defaults=test_data)
     assert not save(config)
 
+def test_getoutput():
+    from simpleconfig import load_or_create
+    config = load_or_create('./config.json', defaults=test_data)
+    raise Exception()
+
 
 def get_formatter():
     from simpleconfig import get_formatter

@@ -18,6 +18,7 @@ tests_require = [
     'pytest-cov',
     'pytest-pep8',
     'mock',
+    'tox',
 ]
 
 install_requires = [

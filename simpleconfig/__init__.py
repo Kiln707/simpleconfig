@@ -4,14 +4,12 @@ This library facilitates easily handling and managing changable and non-changeab
 '''
 # TODO: Expand documentation for simpleconfig
 
-from .exceptions import NoExtensionError, NoFormatterError
-from .formatters import FormatterBase, INI_Formatter, JSON_Formatter
+from simpleconfig.formatters.exceptions import NoExtensionError, NoFormatterError
+from .formatters import FormatFactory
 from blinker import signal
 from os import path, environ, makedirs
 
-
-_formatters = {'ini': INI_Formatter, 'json': JSON_Formatter}
-
+_formatters = FormatFactory()
 
 on_update = signal('simpleconfig_on_update')
 """
@@ -45,7 +43,6 @@ use:
 on_save = signal('simpleconfig_on_save')
 
 on_load = signal('simpleconfig_on_load')
-
 
 
 def create_configuration(filepath='', defaults={}, load_env=False, _parent=None, **kwargs):
@@ -147,13 +144,16 @@ def load(configuration):
 def save(configuration):
     on_save.send(sender=configuration)
     filepath = configuration._location
+    print(filepath)
     if not filepath:
         return False
     try:
-        formatter = get_formatter(filepath=filepath)
+        formatter = _formatters.get_formatter(filepath=filepath)
     except (NoExtensionError, NoFormatterError):
+        print('error')
         return False
     makedirs(path.join(filepath.parents[0]), exist_ok=True)
+    print('creating')
     with open(filepath, 'w+') as f:
         formatter.write(file=f, data=configuration._data)
     return True
@@ -172,7 +172,7 @@ def _load_file(filepath, configuration):
     if not path.exists(filepath):
         return configuration
     try:
-        formatter = get_formatter(filepath=filepath)
+        formatter = _formatters.get_formatter(filepath=filepath)
     except (NoFormatterError, NoExtensionError):
         return configuration
     data={}
@@ -180,25 +180,6 @@ def _load_file(filepath, configuration):
         data = formatter.read(configFile)
     configuration._data.update(data)
     return configuration
-
-
-def set_formatter(file_exts, formatter):
-    for ext in file_exts:
-        _formatters[ext] = formatter
-
-
-def remove_formatter(ext):
-    _formatters.pop(ext, None)
-
-
-def get_formatter(filepath):
-    if not filepath or len(str(filepath.name).split('.')) <= 1:
-        raise NoExtensionError()
-    ext = str(filepath.name).split('.')[1]
-    if ext not in _formatters:
-        raise NoFormatterError(ext=ext)
-    return _formatters[ext]()
-
 
 from .configuration import Configuration
 from .settings import Settings

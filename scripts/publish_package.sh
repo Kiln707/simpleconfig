@@ -1,5 +1,5 @@
 #!/bin/bash
 CWD="$PWD"
 cd ..
-twine upload pysimpleconfig dist/*
+twine upload dist/*
 cd "$CWD"
