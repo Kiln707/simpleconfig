@@ -7,21 +7,30 @@ class FormatFactory:
     def __init__(self):
         self._formatters = {
             "ini": INI_Formatter,
-            "json": JSON_Formatter
+            "json": JSON_Formatter,
         }
 
-    def add_formatter(self, file_exts: list, formatter):
+    def add_formatters(self, file_exts: list, formatter):
         for ext in file_exts:
-            self._formatters[ext] = formatter
+            self.add_formatter(ext, formatter)
+
+    def add_formatter(self, ext: str, formatter):
+        self._formatters[ext] = formatter
 
     def remove_formatter(self, ext):
         self._formatters.pop(ext, None)
 
     def get_formatter(self, filepath):
-        if not filepath or len(str(filepath.name).split('.')) <= 1:
+        if not filepath:
             raise NoExtensionError()
-        ext = str(filepath.name).split('.')[1]
-        print(ext, self._formatters, ext in self._formatters)
+        else:
+            try:
+                ext = str(filepath.name)
+            except AttributeError:
+                ext = filepath
+            d = ext.split('.')
+            if len(d) > 1:
+                ext = d[1]
         if ext not in self._formatters:
             raise NoFormatterError(ext=ext)
         return self._formatters[ext]()

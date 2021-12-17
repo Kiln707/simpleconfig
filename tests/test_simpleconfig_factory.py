@@ -36,13 +36,13 @@ def test_create_configuration():
 
 
 def test_create_settings_auto_save():
-    from simpleconfig import load_or_create, create_settings, Settings
+    from simpleconfig import load_or_create, Settings
     config = load_or_create(defaults=test_data, auto_save=True)
     assert isinstance(config, Settings)
 
 
 def test_create_settings_updatable():
-    from simpleconfig import load_or_create, create_settings, Settings
+    from simpleconfig import load_or_create, Settings
     config = load_or_create(defaults=test_data, updatable=True)
     assert isinstance(config, Settings)
 
@@ -58,18 +58,14 @@ def test_exception_creation_empty():
     pytest.raises(Exception, load_or_create)
 
 
-def test_remove_formatter():
-    from simpleconfig import _formatters, remove_formatter
+def test_remove_and_insert_formatter():
+    from simpleconfig import _formatters, remove_formatter, JSON_Formatter, NoFormatterError, add_formatter
+    assert isinstance(_formatters.get_formatter('test.json'), JSON_Formatter)
     remove_formatter('json')
-    assert 'json' not in _formatters
-
-
-def test_insert_formatter():
-    from simpleconfig import _formatters, remove_formatter, JSON_Formatter, set_formatter
-    remove_formatter('json')
-    assert 'json' not in _formatters
-    set_formatter('json', JSON_Formatter)
-    assert 'json' not in _formatters
+    with pytest.raises(NoFormatterError) as e:
+        _formatters.get_formatter('test.json')
+    add_formatter('json', JSON_Formatter)
+    assert isinstance(_formatters.get_formatter('test.json'), JSON_Formatter)
 
 
 def test_exception_no_formatter():
@@ -88,11 +84,6 @@ def test_save_config_no_location():
     from simpleconfig import load_or_create, save
     config = load_or_create(defaults=test_data)
     assert not save(config)
-
-def test_getoutput():
-    from simpleconfig import load_or_create
-    config = load_or_create('./config.json', defaults=test_data)
-    raise Exception()
 
 
 def get_formatter():

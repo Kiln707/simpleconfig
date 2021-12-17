@@ -8,6 +8,7 @@ from simpleconfig.formatters.exceptions import NoExtensionError, NoFormatterErro
 from .formatters import FormatFactory
 from blinker import signal
 from os import path, environ, makedirs
+from .formatters import JSON_Formatter, INI_Formatter, NoFormatterError, NoExtensionError, FormatterBase, FormatFactory
 
 _formatters = FormatFactory()
 
@@ -144,16 +145,13 @@ def load(configuration):
 def save(configuration):
     on_save.send(sender=configuration)
     filepath = configuration._location
-    print(filepath)
     if not filepath:
         return False
     try:
         formatter = _formatters.get_formatter(filepath=filepath)
     except (NoExtensionError, NoFormatterError):
-        print('error')
         return False
     makedirs(path.join(filepath.parents[0]), exist_ok=True)
-    print('creating')
     with open(filepath, 'w+') as f:
         formatter.write(file=f, data=configuration._data)
     return True
@@ -180,6 +178,22 @@ def _load_file(filepath, configuration):
         data = formatter.read(configFile)
     configuration._data.update(data)
     return configuration
+
+
+def get_formatter(filepath):
+    global _formatters
+    return _formatters.get_formatter(filepath)
+
+
+def remove_formatter(ext):
+    global _formatters
+    return _formatters.remove_formatter(ext)
+
+
+def add_formatter(file_exts: list, formatter):
+    global _formatters
+    return _formatters.add_formatter(file_exts, formatter)
+
 
 from .configuration import Configuration
 from .settings import Settings
