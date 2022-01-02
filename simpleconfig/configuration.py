@@ -30,7 +30,6 @@ class Configuration:
     def valueOf(self, name, default=None, type_=None):
         value = self._data.get(name, default) # Get the value or default from config
         if type_ and isinstance(type_, type): # If it is not None and needs to be a certain type
-            print(type(value), value)
             if value and not isinstance(value, type_):
                 value = type_(value) #Cast value as type
         elif isinstance(value, dict): # Dont return a dict, unless expressly told to.
