@@ -1,5 +1,5 @@
 #! /bin/bash
 CWD="$PWD"
 cd ..
-python setup.py sdist bdist_wheel
+python3 setup.py sdist bdist_wheel
 cd "$CWD"
